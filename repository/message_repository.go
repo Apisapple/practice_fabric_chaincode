@@ -31,7 +31,7 @@ func ReadMessage(ctx router.Context, title string) (interface{}, error) {
 	key := makeStateKey(title)
 	data, err := ctx.State().Get(key)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("state get is error == %w", err)
 	}
 
 	return data, nil

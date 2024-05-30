@@ -9,15 +9,15 @@ import (
 )
 
 func NewPracticeChaincode() *router.Chaincode {
-	r := router.New(`practice_chaincode`)
+	r := router.New(`chaincode`)
 
-	r.Query("get_msg", service.GetMessage)
+	r.Query("get", service.GetMessage)
 
-	r.Invoke("save_msg", service.SaveMessage)
+	r.Invoke("save", service.SaveMessage)
 
-	r.Invoke("update_msg", service.UpdateMessage)
+	r.Invoke("update", service.UpdateMessage)
 
-	r.Invoke("delete_msg", service.DeleteMessage)
+	r.Invoke("delete", service.DeleteMessage)
 
 	return router.NewChaincode(r)
 }
