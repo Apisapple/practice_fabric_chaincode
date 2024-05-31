@@ -13,13 +13,20 @@ func CreateMessage(ctx router.Context, msg *entity.Message) error {
 
 	jsonData, err := msg.ToJson()
 	if err != nil {
+		ctx.State().Logger().Error(
+			fmt.Sprintf("Failed to convert message to JSON: %v", err),
+		)
 		return err
 	}
+	ctx.State().Logger().Info(fmt.Sprintf("Message JSON: %s", jsonData))
 
 	key := makeStateKey(msg.Title)
+	ctx.State().Logger().Info(fmt.Sprintf("Generated state plantext: %s", msg.Title))
+	ctx.State().Logger().Info(fmt.Sprintf("Generated state key: %s", key))
+
 	err = ctx.State().Insert(key, jsonData)
 	if err != nil {
-		ctx.State().Logger().Error(`insert error`)
+		ctx.State().Logger().Error(fmt.Sprintf("Insert error for key %s with data %s: %v", key, jsonData, err))
 		return err
 	}
 
@@ -31,7 +38,7 @@ func ReadMessage(ctx router.Context, title string) (interface{}, error) {
 	key := makeStateKey(title)
 	data, err := ctx.State().Get(key)
 	if err != nil {
-		return nil, fmt.Errorf("state get is error == %w", err)
+		return nil, fmt.Errorf("message_reopsitory error => {%w}", err)
 	}
 
 	return data, nil

@@ -14,12 +14,12 @@ func GetMessage(ctx router.Context) (interface{}, error) {
 		return nil, fmt.Errorf("args value is nil")
 	}
 
-	msg := new(entity.Message)
-	if err := msg.ToObject(args[1]); err != nil {
+	data, err := repository.ReadMessage(ctx, string(args[1]))
+	if err != nil {
 		return nil, err
 	}
 
-	return repository.ReadMessage(ctx, msg.Title)
+	return data, nil
 }
 
 func SaveMessage(ctx router.Context) (interface{}, error) {
@@ -29,14 +29,14 @@ func SaveMessage(ctx router.Context) (interface{}, error) {
 		return nil, fmt.Errorf("args value is nil")
 	}
 
-	message := new(entity.Message)
+	message := new(entity.Request)
 	err := message.ToObject(args[1])
 	if err != nil {
-		fmt.Printf("convert error %s", err.Error())
+		fmt.Printf("convert error %s\n", err.Error())
 		return nil, err
 	}
 
-	err = repository.CreateMessage(ctx, message)
+	err = repository.CreateMessage(ctx, message.Msg)
 	if err != nil {
 		return nil, err
 	}

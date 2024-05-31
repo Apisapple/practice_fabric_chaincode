@@ -16,10 +16,6 @@ func TestOpenDID(t *testing.T) {
 	RunSpecs(t, `Practice Chaincode`)
 }
 
-type Request struct {
-	Msg *entity.Message `json:"msg,omitempty"`
-}
-
 var (
 	Payload = []*entity.Message{
 		{
@@ -35,7 +31,7 @@ var (
 			Content: "content_3",
 		},
 	}
-	Req = []*Request{
+	Req = []*entity.Request{
 		{
 			Msg: Payload[0],
 		},
@@ -52,7 +48,8 @@ var _ = Describe(`PracticeChaincode`, func() {
 		})
 
 		It("Allow everyone to retrieve message information", func() {
-			message := expectcc.PayloadIs(cc.Invoke("get", Payload[0].Title), &entity.Message{}).(entity.Message)
+			message := expectcc.PayloadIs(cc.Query("get",
+				Payload[0].Title), &entity.Message{}).(entity.Message)
 
 			Expect(message.Title).To(Equal(Payload[0].Title))
 		})
